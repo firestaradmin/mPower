@@ -1,0 +1,4 @@
+Change Component Comment : Designator=C1 Old Comment=0.1uF New Comment=10nF
+Change Component Comment : Designator=R1 Old Comment=1K New Comment=0R
+Change Component Comment : Designator=R2 Old Comment=1K New Comment=0R
+Added Member To Class: ClassName=interface Member=Component USB_O OUTPUT TYPEC

@@ -1,0 +1,12 @@
+Change Component Designator: OldDesignator=*1 NewDesignator=INA1
+Change Component Designator: OldDesignator=JP1 NewDesignator=JP_JTAG
+Change Component Designator: OldDesignator=JP2 NewDesignator=JP_U
+Change Component Designator: OldDesignator=JP3 NewDesignator=JP_EX-IO
+Change Component Designator: OldDesignator=JP4 NewDesignator=JP_O
+Change Component Designator: OldDesignator=KEY1 NewDesignator=KEY_RES
+Change Component Designator: OldDesignator=KEY2 NewDesignator=KEY_BOOT
+Change Component Designator: OldDesignator=SW* NewDesignator=KEY
+Change Component Designator: OldDesignator=USB1 NewDesignator=USB_IN
+Change Component Designator: OldDesignator=USB2 NewDesignator=USB_O
+Change Component Designator: OldDesignator=USB3 NewDesignator=USB_O
+Change Component Designator: OldDesignator=USB NewDesignator=USB_D
