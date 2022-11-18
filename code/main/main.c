@@ -138,7 +138,7 @@ void gpio_init(void)
     gpio_config(&io_conf);
 
     gpio_set_level(1, 0);
-    gpio_set_level(2, 0);
+    gpio_set_level(2, 1);
     gpio_set_level(3, 0);
     gpio_set_level(6, 1);
 
