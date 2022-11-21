@@ -14,7 +14,7 @@
 
 #include "key.h"
 #include "led.h"
-#include "lcd_st7735s.h"
+#include "lcd_st7789.h"
 
 /* UVGUI */
 #include "ug_port.h"

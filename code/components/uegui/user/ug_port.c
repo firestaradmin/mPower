@@ -1,5 +1,5 @@
 
-#include "lcd_st7735s.h"
+#include "lcd_st7789.h"
 #include "ug_disp.h"
 #include "ug_area.h"
 #include <stdio.h>
