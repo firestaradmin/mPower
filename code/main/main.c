@@ -16,28 +16,18 @@
 #include "led.h"
 #include "lcd_st7789.h"
 
-/* UVGUI */
-#include "ug_port.h"
-#include "ug_disp.h"
-#include "ug_refr.h"
-// #include "ug_math.h"
-// #include "ug_ll.h"
-// #include "ug_draw_elements.h"
-// #include "ug_task.h"
-// #include "ug_obj.h"
-// #include "ug_area.h"
-#include "ug_tick.h"
-#include "ug_main.h"
-#include "ug_label.h"
-#include "ug_font_declare.h"
+#include "ug_log.h"
 
-#include "ug_font_SFMono_16_4bpp_symbol_define.h"
-#include "ug_font_TenXunFont_32_4bpp_symbol_define.h"
+/* LVGL */
+#include "ug_log.h"
+#include "lvgl.h"
+#include "lv_port_disp.h"
+
+
 void vOtherFunction( void );
 void vTask_ug_tick( void * pvParameters );
 void vTask_adc_task(void *pvParameters);
-ug_obj_t *obj3;
-ug_obj_t *text1;
+
 
 SemaphoreHandle_t xSemaphore = NULL;
 static char buf[200];
@@ -54,63 +44,52 @@ static const adc_atten_t atten = ADC_ATTEN_DB_11;
 #define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling
 
-// void app_main(void)
-// {
-// 	printf("Kite_V1 core board demo!\n");
 
-//     led_init();
-// 	key_init();
 
-//     lcd_init();
-
-//     lcd_fill(0, 0,80, 80, 0xffff);
-//     lcd_fill(0, 80, 80, 160, 0x0000);
-//     lcd_fill(40, 100, 60, 140, 0x7ffa);
-//     while(1)
-// 	{
-// 		vTaskDelay(100 / portTICK_RATE_MS);
-// 	}
-
-// }
-
+void create_ui();
+void vOtherFunction( void );
 void gpio_init(void);
-#if 1
-ug_task_t * task1;
-void change_size_task(ug_task_t *p);
+// void change_size_task(ug_task_t *p);
+SemaphoreHandle_t ugLog_mutex;
+
+void ugLogLock()
+{
+    xSemaphoreTake(ugLog_mutex, portMAX_DELAY );
+    
+}
+void ugLogUnlock()
+{
+    xSemaphoreGive(ugLog_mutex);
+}
+
+void ug_log_mutex_init( )
+{
+    ugLog_mutex = xSemaphoreCreateMutex();
+    if( ugLog_mutex == NULL )
+    {
+        printf("ug log mutex err!\r\n");
+    }
+}
+
 void app_main(void)
 {
 	printf("mPower demo!\n");
-
+    ug_log_mutex_init();
+    ug_log_init(ug_log_mutexWay_externel, printf, ugLogLock, ugLogUnlock);
     led_init();
-    gpio_init();
-	ug_init();
-    ug_port_disp_init();
+	key_init();
+    lv_init();
+    lv_port_disp_init();
+
+    create_ui();
 
 	vOtherFunction();
+    UGINFO("every thing willl be ok!\r\n");
 
-	ug_area_t area ;
-	area.x1 = 0;
-	area.x2 = 160;
-	area.y1 = 0;
-	area.y2 = 80;
-	// obj3 = ug_obj_create(ug_disp_get_actdisp_actscr(), NULL, "obj3_red");
-	// ug_obj_set_color(obj3, UG_COLOR_GREEN);
-	// ug_obj_set_coords(obj3, &area);
 
-    text1 = ug_label_create(ug_disp_get_actdisp_actscr(), NULL);
-	ug_obj_set_coords(text1, &area);
-    ug_label_set_text(text1, FA_GRIN_STARS);
-    ug_label_set_font(text1, &ug_font_TenXunFont_32_4bpp_30);
-    ug_label_set_color(text1, UG_COLOR_BLUE);
-    text1->bd_width = 0;
-    ug_obj_invalidate(ug_disp_get_actdisp_actscr());
-
-    task1 = ug_task_create(change_size_task, 500, 2, NULL);
-    if(task1 == NULL) return NULL;
-    ug_task_ready(task1); 
     while(1)
 	{
-		ug_task_handler();
+        lv_timer_handler();
 	}
 
 
@@ -156,37 +135,47 @@ void gpio_init(void)
 }
 
 
-
-
-void change_size_task(ug_task_t *p)
+void create_ui()
 {
-    // static int adv = 2;
-    // ug_color_t color;
-    // if(text1->coords.x2 >= 159 || text1->coords.x1 <= 0){
-    //     adv *= -1;
-    //     color = ug_color_make(text1->coords.x1, text1->coords.x2, text1->coords.x2);
-    //     ug_label_set_color(text1, &color);
-    // }
+    lv_obj_t * btn = lv_btn_create(lv_scr_act());                   /*Add a button to the current screen*/
+    lv_obj_set_pos(btn, 10, 10);                                    /*Set its position*/
+    lv_obj_set_size(btn, 100, 50);                                  /*Set its size*/
+    lv_obj_add_event_cb(btn, NULL, LV_EVENT_CLICKED, NULL); /*Assign a callback to the button*/
 
-	// ug_obj_move(text1,2,0);
-
-    static int a = 0;
-    // if(a == 0){
-    //     ug_label_set_text(text1, FA_GRIN_SQUINT"LXG");
-    //     a = 1;
-    // }
-    // else {
-    //     ug_label_set_text(text1, FA_GRIN_STARS"GGNB");
-    //     a = 0;
-    // }
-    if( xSemaphoreTake( xSemaphore, ( TickType_t ) 1000 ) == pdTRUE )
-    {
-
-        ug_label_set_text(text1, buf);
-
-        xSemaphoreGive( xSemaphore );
-    }
+    lv_obj_t * label = lv_label_create(btn);                        /*Add a label to the button*/
+    lv_label_set_text(label, "Button");                             /*Set the labels text*/
+    lv_obj_center(label); 
 }
+
+// void change_size_task(ug_task_t *p)
+// {
+//     // static int adv = 2;
+//     // ug_color_t color;
+//     // if(text1->coords.x2 >= 159 || text1->coords.x1 <= 0){
+//     //     adv *= -1;
+//     //     color = ug_color_make(text1->coords.x1, text1->coords.x2, text1->coords.x2);
+//     //     ug_label_set_color(text1, &color);
+//     // }
+
+// 	// ug_obj_move(text1,2,0);
+
+//     static int a = 0;
+//     // if(a == 0){
+//     //     ug_label_set_text(text1, FA_GRIN_SQUINT"LXG");
+//     //     a = 1;
+//     // }
+//     // else {
+//     //     ug_label_set_text(text1, FA_GRIN_STARS"GGNB");
+//     //     a = 0;
+//     // }
+//     if( xSemaphoreTake( xSemaphore, ( TickType_t ) 1000 ) == pdTRUE )
+//     {
+
+//         ug_label_set_text(text1, buf);
+
+//         xSemaphoreGive( xSemaphore );
+//     }
+// }
 
 
 // Function that creates a task.
@@ -200,7 +189,7 @@ void vOtherFunction( void )
     if( xSemaphore != NULL )
     {
         xSemaphoreGive( xSemaphore );
-        printf("success xSemaphoreGive( xSemaphore );");
+        printf("success xSemaphoreGive( xSemaphore );\r\n");
         // The semaphore was created successfully.
         // The semaphore can now be used.
     }
@@ -210,8 +199,8 @@ void vOtherFunction( void )
  // the new task attempts to access it.
 	xTaskCreate( vTask_ug_tick, "vTask_ug_tick", 1024, NULL, 9, &xHandle );
 	configASSERT( xHandle );
-	xTaskCreate( vTask_adc_task, "vTask_adc_task", 4096, NULL, 8, &xHandle2 );
-	configASSERT( xHandle2 );
+	// xTaskCreate( vTask_adc_task, "vTask_adc_task", 4096, NULL, 8, &xHandle2 );
+	// configASSERT( xHandle2 );
 
 	// Use the handle to delete the task.
 	// if( xHandle != NULL )
@@ -228,7 +217,7 @@ void vTask_ug_tick( void * pvParameters )
 	for( ;; )
 	{
 		// Task code goes here.
-		ug_tick_inc(10);
+		lv_tick_inc(10);
 		vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
@@ -295,5 +284,3 @@ void vTask_adc_task( void * pvParameters )
 }
 
 
-
-#endif

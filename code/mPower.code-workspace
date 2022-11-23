@@ -63,7 +63,11 @@
             "ug_font.h": "c",
             "ug_font_declare.h": "c",
             "freertosconfig.h": "c",
-            "stdint.h": "c"
+            "stdint.h": "c",
+            "esp_system.h": "c",
+            "esp_adc_cal.h": "c",
+            "adc.h": "c",
+            "semphr.h": "c"
         }
 	}
 }

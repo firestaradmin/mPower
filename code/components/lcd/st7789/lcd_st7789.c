@@ -217,11 +217,11 @@ void lcd_init(void)
             vTaskDelay(100 / portTICK_RATE_MS);
         }
         cmd++;
-        printf("cmd:%d\r\n", cmd);
+        // printf("cmd:%d\r\n", cmd);
 
     }
     ///Enable backlight
-    gpio_set_level(PIN_NUM_BCKL, 1);
+    gpio_set_level(PIN_NUM_BCKL, 0);
 
     
 }
