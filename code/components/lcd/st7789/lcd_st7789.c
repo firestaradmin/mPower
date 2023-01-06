@@ -33,45 +33,45 @@ esp_err_t ret;
 static spi_device_handle_t spi;
 
 
-//Place data into DRAM. Constant data gets placed into DROM by default, which is not accessible by DMA.
-DRAM_ATTR static const lcd_init_cmd_t st_init_cmds[]={
-    /* Memory Data Access Control, MX=MV=1, MY=ML=MH=0, RGB=0 */
-    {0x36, {(1<<5)|(1<<6)}, 1},
-    /* Interface Pixel Format, 16bits/pixel for RGB/MCU interface */
-    {0x3A, {0x55}, 1},
-    /* Porch Setting */
-    {0xB2, {0x0c, 0x0c, 0x00, 0x33, 0x33}, 5},
-    /* Gate Control, Vgh=13.65V, Vgl=-10.43V */
-    {0xB7, {0x35}, 1},
-    /* VCOM Setting, VCOM=1.175V */
-    {0xBB, {0x19}, 1},
-    /* LCM Control, XOR: BGR, MX, MH */
-    {0xC0, {0x2c}, 1},
-    /* VDV and VRH Command Enable, enable=1 */
-    {0xC2, {0x01, 0xff}, 2},
-    /* VRH Set, Vap=4.4+... */
-    {0xC3, {0x12}, 1},
-    /* VDV Set, VDV=0 */
-    {0xC4, {0x20}, 1},
-    /* Frame Rate Control, 60Hz, inversion=0 */
-    {0xC6, {0x0f}, 1},
-    /* Power Control 1, AVDD=6.8V, AVCL=-4.8V, VDDS=2.3V */
-    {0xD0, {0xA4, 0xA1}, 1},
-    /* Positive Voltage Gamma Control */
-    {0xE0, {0xd0, 0x04, 0x0d, 0x11, 0x13, 0x2b, 0x3f, 0x54, 0x4c, 0x18, 0x0d, 0x0b, 0x1f, 0x23}, 14},
-    /* Negative Voltage Gamma Control */
-    {0xE1, {0xd0, 0x04, 0x0c, 0x11, 0x13, 0x2c, 0x3f, 0x44, 0x51, 0x2f, 0x1f, 0x1f, 0x20, 0x23}, 14},
-    // /* Positive Voltage Gamma Control */
-    // {0xE0, {0xD0, 0x00, 0x05, 0x0E, 0x15, 0x0D, 0x37, 0x43, 0x47, 0x09, 0x15, 0x12, 0x16, 0x19}, 14},
-    // /* Negative Voltage Gamma Control */
-    // {0xE1, {0xD0, 0x00, 0x05, 0x0D, 0x0C, 0x06, 0x2D, 0x44, 0x40, 0x0E, 0x1C, 0x18, 0x16, 0x19}, 14},
-    /* Sleep Out */
-    {0x11, {0}, 0x80},
-    /* Display On */
-    {0x29, {0}, 0x80},
-    {0, {0}, 0xff}
+// //Place data into DRAM. Constant data gets placed into DROM by default, which is not accessible by DMA.
+// DRAM_ATTR static const lcd_init_cmd_t st_init_cmds[]={
+//     /* Memory Data Access Control, MX=MV=1, MY=ML=MH=0, RGB=0 */
+//     {0x36, {(1<<5)|(1<<6)}, 1},
+//     /* Interface Pixel Format, 16bits/pixel for RGB/MCU interface */
+//     {0x3A, {0x55}, 1},
+//     /* Porch Setting */
+//     {0xB2, {0x0c, 0x0c, 0x00, 0x33, 0x33}, 5},
+//     /* Gate Control, Vgh=13.65V, Vgl=-10.43V */
+//     {0xB7, {0x35}, 1},
+//     /* VCOM Setting, VCOM=1.175V */
+//     {0xBB, {0x19}, 1},
+//     /* LCM Control, XOR: BGR, MX, MH */
+//     {0xC0, {0x2c}, 1},
+//     /* VDV and VRH Command Enable, enable=1 */
+//     {0xC2, {0x01, 0xff}, 2},
+//     /* VRH Set, Vap=4.4+... */
+//     {0xC3, {0x12}, 1},
+//     /* VDV Set, VDV=0 */
+//     {0xC4, {0x20}, 1},
+//     /* Frame Rate Control, 60Hz, inversion=0 */
+//     {0xC6, {0x0f}, 1},
+//     /* Power Control 1, AVDD=6.8V, AVCL=-4.8V, VDDS=2.3V */
+//     {0xD0, {0xA4, 0xA1}, 1},
+//     /* Positive Voltage Gamma Control */
+//     {0xE0, {0xd0, 0x04, 0x0d, 0x11, 0x13, 0x2b, 0x3f, 0x54, 0x4c, 0x18, 0x0d, 0x0b, 0x1f, 0x23}, 14},
+//     /* Negative Voltage Gamma Control */
+//     {0xE1, {0xd0, 0x04, 0x0c, 0x11, 0x13, 0x2c, 0x3f, 0x44, 0x51, 0x2f, 0x1f, 0x1f, 0x20, 0x23}, 14},
+//     // /* Positive Voltage Gamma Control */
+//     // {0xE0, {0xD0, 0x00, 0x05, 0x0E, 0x15, 0x0D, 0x37, 0x43, 0x47, 0x09, 0x15, 0x12, 0x16, 0x19}, 14},
+//     // /* Negative Voltage Gamma Control */
+//     // {0xE1, {0xD0, 0x00, 0x05, 0x0D, 0x0C, 0x06, 0x2D, 0x44, 0x40, 0x0E, 0x1C, 0x18, 0x16, 0x19}, 14},
+//     /* Sleep Out */
+//     {0x11, {0}, 0x80},
+//     /* Display On */
+//     {0x29, {0}, 0x80},
+//     {0, {0}, 0xff}
 
-};
+// };
 
 
 
@@ -137,6 +137,19 @@ void lcd_data(spi_device_handle_t spi, const uint8_t *data, int len)
     assert(ret==ESP_OK);            //Should have had no issues.
 }
 
+void lcd_wr_data_8bit(uint8_t data)
+{
+    esp_err_t ret;
+    spi_transaction_t t;
+    uint8_t txdata[1];
+    txdata[0] = (uint8_t)data;
+    memset(&t, 0, sizeof(t));       //Zero out the transaction
+    t.length=8;                 //Len is in bytes, transaction length is in bits.
+    t.tx_buffer=txdata;               //Data
+    t.user=(void*)1;                //D/C needs to be set to 1
+    ret=spi_device_polling_transmit(spi, &t);  //Transmit!
+    assert(ret==ESP_OK);            //Should have had no issues.
+}
 
 
 void lcd_wr_data_16bit(uint16_t data)
@@ -152,6 +165,97 @@ void lcd_wr_data_16bit(uint16_t data)
     t.user=(void*)1;                //D/C needs to be set to 1
     ret=spi_device_polling_transmit(spi, &t);  //Transmit!
     assert(ret==ESP_OK);            //Should have had no issues.
+}
+
+// lcd_cmd(spi, st_init_cmds[cmd].cmd);
+// lcd_data(spi, st_init_cmds[cmd].data, st_init_cmds[cmd].databytes&0x1F);
+#define LCD_WR_REG(x) lcd_wr_reg(x)
+#define LCD_WR_DATA8(x) lcd_wr_data_8bit(x)
+
+void _LCD_Init(void)
+{
+	
+	vTaskDelay(100 / portTICK_RATE_MS);
+	
+	LCD_WR_REG(0x11); 
+	vTaskDelay(120 / portTICK_RATE_MS);
+	LCD_WR_REG(0x36); 
+    LCD_WR_DATA8(0x00);
+	// if(USE_HORIZONTAL==0)LCD_WR_DATA8(0x00);
+	// else if(USE_HORIZONTAL==1)LCD_WR_DATA8(0xC0);
+	// else if(USE_HORIZONTAL==2)LCD_WR_DATA8(0x70);
+	// else LCD_WR_DATA8(0xA0);
+
+	LCD_WR_REG(0x3A);
+	LCD_WR_DATA8(0x05);
+
+	LCD_WR_REG(0xB2);
+	LCD_WR_DATA8(0x0C);
+	LCD_WR_DATA8(0x0C);
+	LCD_WR_DATA8(0x00);
+	LCD_WR_DATA8(0x33);
+	LCD_WR_DATA8(0x33); 
+
+	LCD_WR_REG(0xB7); 
+	LCD_WR_DATA8(0x35);  
+
+	LCD_WR_REG(0xBB);
+	LCD_WR_DATA8(0x19);
+
+	LCD_WR_REG(0xC0);
+	LCD_WR_DATA8(0x2C);
+
+	LCD_WR_REG(0xC2);
+	LCD_WR_DATA8(0x01);
+
+	LCD_WR_REG(0xC3);
+	LCD_WR_DATA8(0x12);   
+
+	LCD_WR_REG(0xC4);
+	LCD_WR_DATA8(0x20);  
+
+	LCD_WR_REG(0xC6); 
+	LCD_WR_DATA8(0x0F);    
+
+	LCD_WR_REG(0xD0); 
+	LCD_WR_DATA8(0xA4);
+	LCD_WR_DATA8(0xA1);
+
+	LCD_WR_REG(0xE0);
+	LCD_WR_DATA8(0xD0);
+	LCD_WR_DATA8(0x04);
+	LCD_WR_DATA8(0x0D);
+	LCD_WR_DATA8(0x11);
+	LCD_WR_DATA8(0x13);
+	LCD_WR_DATA8(0x2B);
+	LCD_WR_DATA8(0x3F);
+	LCD_WR_DATA8(0x54);
+	LCD_WR_DATA8(0x4C);
+	LCD_WR_DATA8(0x18);
+	LCD_WR_DATA8(0x0D);
+	LCD_WR_DATA8(0x0B);
+	LCD_WR_DATA8(0x1F);
+	LCD_WR_DATA8(0x23);
+
+	LCD_WR_REG(0xE1);
+	LCD_WR_DATA8(0xD0);
+	LCD_WR_DATA8(0x04);
+	LCD_WR_DATA8(0x0C);
+	LCD_WR_DATA8(0x11);
+	LCD_WR_DATA8(0x13);
+	LCD_WR_DATA8(0x2C);
+	LCD_WR_DATA8(0x3F);
+	LCD_WR_DATA8(0x44);
+	LCD_WR_DATA8(0x51);
+	LCD_WR_DATA8(0x2F);
+	LCD_WR_DATA8(0x1F);
+	LCD_WR_DATA8(0x1F);
+	LCD_WR_DATA8(0x20);
+	LCD_WR_DATA8(0x23);
+
+	LCD_WR_REG(0x21); 
+
+	LCD_WR_REG(0x29); 
 }
 
 
@@ -206,20 +310,20 @@ void lcd_init(void)
     gpio_set_level(PIN_NUM_RST, 1);
     vTaskDelay(100 / portTICK_RATE_MS);
 
+    _LCD_Init();
 
+    // int cmd=0;  
+    // //Send all the commands
+    // while (st_init_cmds[cmd].databytes!=0xff) {
+    //     lcd_cmd(spi, st_init_cmds[cmd].cmd);
+    //     lcd_data(spi, st_init_cmds[cmd].data, st_init_cmds[cmd].databytes&0x1F);
+    //     if (st_init_cmds[cmd].databytes&0x80) {
+    //         vTaskDelay(100 / portTICK_RATE_MS);
+    //     }
+    //     cmd++;
+    //     // printf("cmd:%d\r\n", cmd);
 
-    int cmd=0;  
-    //Send all the commands
-    while (st_init_cmds[cmd].databytes!=0xff) {
-        lcd_cmd(spi, st_init_cmds[cmd].cmd);
-        lcd_data(spi, st_init_cmds[cmd].data, st_init_cmds[cmd].databytes&0x1F);
-        if (st_init_cmds[cmd].databytes&0x80) {
-            vTaskDelay(100 / portTICK_RATE_MS);
-        }
-        cmd++;
-        // printf("cmd:%d\r\n", cmd);
-
-    }
+    // }
     ///Enable backlight
     gpio_set_level(PIN_NUM_BCKL, 0);
 

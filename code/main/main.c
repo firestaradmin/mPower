@@ -78,18 +78,19 @@ void app_main(void)
     ug_log_init(ug_log_mutexWay_externel, printf, ugLogLock, ugLogUnlock);
     led_init();
 	key_init();
-    lv_init();
-    lv_port_disp_init();
+    // lv_init();
+    // lv_port_disp_init();
 
-    create_ui();
+    // create_ui();
 
 	vOtherFunction();
     UGINFO("every thing willl be ok!\r\n");
 
-
+    lcd_init();
+    lcd_fill(0, 0, 100, 100, 0xFFAA);
     while(1)
 	{
-        lv_timer_handler();
+        // lv_timer_handler();
 	}
 
 
@@ -197,8 +198,8 @@ void vOtherFunction( void )
  // must exist for the lifetime of the task, so in this case is declared static.  If it was just an
  // an automatic stack variable it might no longer exist, or at least have been corrupted, by the time
  // the new task attempts to access it.
-	xTaskCreate( vTask_ug_tick, "vTask_ug_tick", 1024, NULL, 9, &xHandle );
-	configASSERT( xHandle );
+	// xTaskCreate( vTask_ug_tick, "vTask_ug_tick", 1024, NULL, 9, &xHandle );
+	// configASSERT( xHandle );
 	// xTaskCreate( vTask_adc_task, "vTask_adc_task", 4096, NULL, 8, &xHandle2 );
 	// configASSERT( xHandle2 );
 
